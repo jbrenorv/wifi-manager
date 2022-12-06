@@ -26,4 +26,8 @@ abstract class WifiManagerPlatform extends PlatformInterface {
   Future<String?> getPlatformVersion() {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
+
+  Future<String?> getConnectionInfo() {
+    throw UnimplementedError('platformVersion() has not been implemented.');
+  }
 }

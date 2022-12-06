@@ -11,7 +11,15 @@ class MethodChannelWifiManager extends WifiManagerPlatform {
 
   @override
   Future<String?> getPlatformVersion() async {
-    final version = await methodChannel.invokeMethod<String>('getPlatformVersion');
+    final version =
+        await methodChannel.invokeMethod<String>('getPlatformVersion');
     return version;
+  }
+
+  @override
+  Future<String?> getConnectionInfo() async {
+    final networkSSID =
+        await methodChannel.invokeMethod<String>('getConnectionInfo');
+    return networkSSID;
   }
 }

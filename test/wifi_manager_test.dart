@@ -7,9 +7,11 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 class MockWifiManagerPlatform
     with MockPlatformInterfaceMixin
     implements WifiManagerPlatform {
-
   @override
   Future<String?> getPlatformVersion() => Future.value('42');
+
+  @override
+  Future<String?> getConnectionInfo() => Future.value('w5-1200g');
 }
 
 void main() {
