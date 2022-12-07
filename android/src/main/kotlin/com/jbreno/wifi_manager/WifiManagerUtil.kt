@@ -12,16 +12,16 @@ class WifiManagerUtil(private val context: Context) {
 
     @SuppressLint("MissingPermission")
     public fun getConnectionInfo(): String? {
-//        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
-//            val wifiInfo = wifiManager.getConnectionInfo()
-//            return "Old - $wifiInfo"
-//        }
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+            val wifiInfo = wifiManager.getConnectionInfo()
+            val configuredNetworks = wifiManager.configuredNetworks
+            return "Old - $wifiInfo \n\n $configuredNetworks"
+        }
 
         val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val networkCapabilities = connectivityManager.getNetworkCapabilities(null)
         val wifiInfo = networkCapabilities?.transportInfo as WifiInfo?
 
-
-        return "New - " + wifiInfo?.ssid
+        return "New - " + wifiInfo?.toString()
     }
 }
