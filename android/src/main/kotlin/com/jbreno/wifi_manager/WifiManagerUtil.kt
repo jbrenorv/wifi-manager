@@ -14,7 +14,7 @@ class WifiManagerUtil(private val context: Context) {
     public fun getConnectionInfo(): String? {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
             val wifiInfo = wifiManager.getConnectionInfo()
-            return wifiInfo.ssid
+            return "Old - " + wifiInfo.ssid
         }
 
         val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -22,6 +22,6 @@ class WifiManagerUtil(private val context: Context) {
         val wifiInfo = networkCapabilities?.transportInfo as WifiInfo?
 
 
-        return wifiInfo?.ssid
+        return "New - " + wifiInfo?.ssid
     }
 }
