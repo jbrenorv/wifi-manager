@@ -40,9 +40,9 @@ class WifiManagerPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
       "getPlatformVersion" -> result.success("Android ${android.os.Build.VERSION.RELEASE}")
 
       "getConnectionInfo" -> {
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_NETWORK_STATE) != PackageManager.PERMISSION_GRANTED) {
-          ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.ACCESS_NETWORK_STATE), 0)
-        }
+//        if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_NETWORK_STATE) != PackageManager.PERMISSION_GRANTED) {
+//          ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.ACCESS_NETWORK_STATE), 0)
+//        }
 
         val ssid = wifiManagerUtil.getConnectionInfo()
         if (ssid != null) {
