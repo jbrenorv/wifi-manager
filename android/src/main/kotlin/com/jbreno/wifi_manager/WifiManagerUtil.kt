@@ -11,15 +11,19 @@ class WifiManagerUtil(private val context: Context) {
     private var wifiManager : WifiManager = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
 
     @SuppressLint("MissingPermission")
-    public fun getConnectionInfo(): String? {
+    fun getConnectionInfo(): String? {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
-            val wifiInfo = wifiManager.getConnectionInfo()
+            val wifiInfo = wifiManager.connectionInfo
+            var connectedTo = "*** Connected to: ID=${wifiInfo.networkId} "
             var configuredNetworks = ""
             wifiManager.configuredNetworks.forEach {
-                configuredNetworks += "$it \n\n"
+                if (it.networkId == wifiInfo.networkId) {
+                    connectedTo += "SSID=${it.SSID}"
+                }
+                configuredNetworks += "SSID: ${it.SSID} - ID: ${it.networkId}\n"
             }
 
-            return "Old - $wifiInfo \n\n $configuredNetworks"
+            return "Old - $connectedTo \n\n $wifiInfo \n\n $configuredNetworks"
         }
 
         val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
