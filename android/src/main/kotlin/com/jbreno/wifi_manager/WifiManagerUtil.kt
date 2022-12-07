@@ -14,7 +14,11 @@ class WifiManagerUtil(private val context: Context) {
     public fun getConnectionInfo(): String? {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
             val wifiInfo = wifiManager.getConnectionInfo()
-            val configuredNetworks = wifiManager.configuredNetworks
+            var configuredNetworks = ""
+            wifiManager.configuredNetworks.forEach {
+                configuredNetworks += "$it \n\n"
+            }
+
             return "Old - $wifiInfo \n\n $configuredNetworks"
         }
 
