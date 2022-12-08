@@ -29,7 +29,9 @@ class WifiManagerUtil(private val context: Context) {
         val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val networkCapabilities = connectivityManager.getNetworkCapabilities(null)
         val wifiInfo = networkCapabilities?.transportInfo as WifiInfo?
+        val networkCapabilitiesToString = "NCP: $networkCapabilities"
+        val wifiInfoToString = "WI: $wifiInfo"
 
-        return "New - " + wifiInfo?.toString()
+        return "New - " + wifiInfo?.toString() + "\n\n$networkCapabilitiesToString\n\n$wifiInfoToString"
     }
 }
