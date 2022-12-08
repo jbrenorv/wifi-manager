@@ -39,6 +39,6 @@ class WifiManagerUtil(private val context: Context) {
         val networkCapabilitiesToString = "NCP: $networkCapabilities"
         val wifiInfoToString = "WI: $wifiInfo"
 
-        return "New - " + wifiInfo?.toString() + "\n\n$networkCapabilitiesToString\n\n$wifiInfoToString"
+        return "New:\nSSID: ${wifiInfo?.ssid}\n$wifiInfoToString\n\n$networkCapabilitiesToString"
     }
 }
