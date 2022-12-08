@@ -12,7 +12,7 @@ class WifiManagerUtil(private val context: Context) {
 
     @SuppressLint("MissingPermission")
     fun getConnectionInfo(): String? {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+//        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
             val wifiInfo = wifiManager.connectionInfo
             var connectedTo = "*** Connected to: ID=${wifiInfo.networkId} "
             var configuredNetworks = ""
@@ -24,14 +24,14 @@ class WifiManagerUtil(private val context: Context) {
             }
 
             return "Old - $connectedTo \n\n $wifiInfo \n\n $configuredNetworks"
-        }
+//        }
 
-        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val networkCapabilities = connectivityManager.getNetworkCapabilities(null)
-        val wifiInfo = networkCapabilities?.transportInfo as WifiInfo?
-        val networkCapabilitiesToString = "NCP: $networkCapabilities"
-        val wifiInfoToString = "WI: $wifiInfo"
-
-        return "New - " + wifiInfo?.toString() + "\n\n$networkCapabilitiesToString\n\n$wifiInfoToString"
+//        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+//        val networkCapabilities = connectivityManager.getNetworkCapabilities(null)
+//        val wifiInfo = networkCapabilities?.transportInfo as WifiInfo?
+//        val networkCapabilitiesToString = "NCP: $networkCapabilities"
+//        val wifiInfoToString = "WI: $wifiInfo"
+//
+//        return "New - " + wifiInfo?.toString() + "\n\n$networkCapabilitiesToString\n\n$wifiInfoToString"
     }
 }
