@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:wifi_manager/models/wifi_credentials.dart';
 import 'package:wifi_manager/wifi_manager.dart';
 import 'package:wifi_manager/wifi_manager_platform_interface.dart';
 import 'package:wifi_manager/wifi_manager_method_channel.dart';
@@ -14,7 +15,8 @@ class MockWifiManagerPlatform
   Future<String?> getConnectionInfo() => Future.value('w5-1200g');
 
   @override
-  Future<bool> requestWifi() => Future.value(true);
+  Future<bool> requestWifi({required WifiCredentials wifiCredentials}) =>
+      Future.value(true);
 }
 
 void main() {

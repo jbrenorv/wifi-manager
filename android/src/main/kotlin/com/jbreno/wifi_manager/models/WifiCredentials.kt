@@ -11,7 +11,7 @@ data class WifiCredentials(
     constructor(wifiCredentialsMap: Map<String, Any>) : this(
         wifiCredentialsMap["ssid"] as String,
         wifiCredentialsMap["password"] as String?,
-        wifiCredentialsMap["wifiSecurityType"] as WifiSecurityType,
+        WifiSecurityType.values()[wifiCredentialsMap["wifiSecurityType"] as Int]
     )
 
     val hasSecurity get() = (password != null && wifiSecurityType != WifiSecurityType.NONE)

@@ -2,11 +2,6 @@ import 'dart:convert';
 
 enum WifiSecurityType { none, wpa2, wpa3 }
 
-extension WifiSecurityTypeExtension on WifiSecurityType {
-  int toMap() => index;
-  WifiSecurityType fromMap(int index) => WifiSecurityType.values[index];
-}
-
 class WifiCredentials {
   final String ssid;
   final String? password;
