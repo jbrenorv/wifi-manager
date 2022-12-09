@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
+import 'models/wifi_credentials.dart';
 import 'wifi_manager_platform_interface.dart';
 
 /// An implementation of [WifiManagerPlatform] that uses method channels.
@@ -24,10 +25,10 @@ class MethodChannelWifiManager extends WifiManagerPlatform {
   }
 
   @override
-  Future<bool> requestWifi() async {
+  Future<bool> requestWifi({required WifiCredentials wifiCredentials}) async {
     try {
-      final requestCompletedSuccessfully =
-          await methodChannel.invokeMethod<bool>('requestWifi');
+      final requestCompletedSuccessfully = await methodChannel
+          .invokeMethod<bool>('requestWifi', wifiCredentials.toMap());
       return requestCompletedSuccessfully ?? false;
     } on PlatformException catch (e) {
       print("_-_requestWifi $e");

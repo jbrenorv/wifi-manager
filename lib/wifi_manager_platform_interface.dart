@@ -1,5 +1,6 @@
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
+import 'models/wifi_credentials.dart';
 import 'wifi_manager_method_channel.dart';
 
 abstract class WifiManagerPlatform extends PlatformInterface {
@@ -31,7 +32,7 @@ abstract class WifiManagerPlatform extends PlatformInterface {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
 
-  Future<bool> requestWifi() {
+  Future<bool> requestWifi({required WifiCredentials wifiCredentials}) {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
 }
