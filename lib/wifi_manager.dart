@@ -8,4 +8,8 @@ class WifiManager {
   Future<String?> getConnectionInfo() {
     return WifiManagerPlatform.instance.getConnectionInfo();
   }
+
+  Future<bool> requestWifi() {
+    return WifiManagerPlatform.instance.requestWifi();
+  }
 }

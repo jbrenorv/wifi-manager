@@ -22,4 +22,16 @@ class MethodChannelWifiManager extends WifiManagerPlatform {
         await methodChannel.invokeMethod<String>('getConnectionInfo');
     return networkSSID;
   }
+
+  @override
+  Future<bool> requestWifi() async {
+    try {
+      final requestCompletedSuccessfully =
+          await methodChannel.invokeMethod<bool>('requestWifi');
+      return requestCompletedSuccessfully ?? false;
+    } on PlatformException catch (e) {
+      print("_-_requestWifi $e");
+      return false;
+    }
+  }
 }

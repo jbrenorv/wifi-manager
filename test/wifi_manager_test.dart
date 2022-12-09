@@ -12,6 +12,9 @@ class MockWifiManagerPlatform
 
   @override
   Future<String?> getConnectionInfo() => Future.value('w5-1200g');
+
+  @override
+  Future<bool> requestWifi() => Future.value(true);
 }
 
 void main() {
