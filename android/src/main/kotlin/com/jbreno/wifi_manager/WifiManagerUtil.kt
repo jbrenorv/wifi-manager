@@ -61,6 +61,7 @@ class WifiManagerUtil(private val context: Context) {
                 .setNetworkSpecifier(wifiNetworkSpecifier.build()).build()
             val connectivityManager = context
                 .getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
             connectivityManager.requestNetwork(networkRequest, ConnectivityManager.NetworkCallback())
 
         } else {
