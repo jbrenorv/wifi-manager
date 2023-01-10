@@ -1,6 +1,7 @@
 package com.jbreno.wifi_manager
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -14,8 +15,9 @@ import com.jbreno.wifi_manager.models.WifiCredentials
 import io.flutter.Log
 
 class WifiManagerUtil(private val context: Context) {
-    private var wifiManager : WifiManager = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
-    private var lastSuggestedNetwork : WifiNetworkSuggestion? = null
+    private var wifiManager: WifiManager =
+        context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+    private var lastSuggestedNetwork: WifiNetworkSuggestion? = null
 
     @SuppressLint("MissingPermission")
     fun getConnectionInfo(): String {
@@ -33,13 +35,11 @@ class WifiManagerUtil(private val context: Context) {
             return "Old - $connectedTo \n\n $wifiInfo \n\n $configuredNetworks"
         }
 
-        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
-//        val network = context.getSystemService(Context.NETWORK_STATS_SERVICE)
-//        val network = Network()
-
-        val networkCapabilities = connectivityManager
-            .getNetworkCapabilities(connectivityManager.activeNetwork)
+        val networkCapabilities =
+            connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
 
         val wifiInfo = networkCapabilities?.transportInfo as WifiInfo?
         val networkCapabilitiesToString = "NCP: $networkCapabilities"
@@ -51,27 +51,9 @@ class WifiManagerUtil(private val context: Context) {
     fun requestWifi(wifiCredentials: WifiCredentials) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
 
-            connectUsingNetworkSuggestion(wifiCredentials.ssid, wifiCredentials.password ?: "")
-
-            /**
-             * First attempt - Fail
-             * Not work for this propose. Create a new wifi connection without internet.
-             *
-            val wifiNetworkSpecifier = WifiNetworkSpecifier.Builder().setSsid(wifiCredentials.ssid)
-            if (wifiCredentials.hasSecurity) {
-                when (wifiCredentials.wifiSecurityType) {
-                    WifiSecurityType.WPA2 -> wifiNetworkSpecifier.setWpa2Passphrase(wifiCredentials.password!!)
-                    WifiSecurityType.WPA3 -> wifiNetworkSpecifier.setWpa3Passphrase(wifiCredentials.password!!)
-                    else -> {}
-                }
-            }
-            val networkRequest = NetworkRequest.Builder()
-                .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
-                .setNetworkSpecifier(wifiNetworkSpecifier.build()).build()
-            val connectivityManager = context
-                .getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-
-            connectivityManager.requestNetwork(networkRequest, ConnectivityManager.NetworkCallback()) */
+            connectUsingNetworkSuggestion(
+                wifiCredentials.ssid, wifiCredentials.password ?: ""
+            )
 
         } else {
 
@@ -87,14 +69,11 @@ class WifiManagerUtil(private val context: Context) {
     @SuppressLint("MissingPermission")
     @RequiresApi(Build.VERSION_CODES.Q)
     private fun connectUsingNetworkSuggestion(ssid: String, password: String) {
-        val wifiNetworkSuggestion = WifiNetworkSuggestion.Builder()
-            .setSsid(ssid)
-            .setWpa2Passphrase(password)
-            .build()
+        val wifiNetworkSuggestion =
+            WifiNetworkSuggestion.Builder().setSsid(ssid).setWpa2Passphrase(password).build()
 
         // Optional (Wait for post connection broadcast to one of your suggestions)
-        val intentFilter =
-            IntentFilter(WifiManager.ACTION_WIFI_NETWORK_SUGGESTION_POST_CONNECTION);
+        val intentFilter = IntentFilter(WifiManager.ACTION_WIFI_NETWORK_SUGGESTION_POST_CONNECTION)
 
         val broadcastReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
@@ -123,12 +102,20 @@ class WifiManagerUtil(private val context: Context) {
         }
         if (status == WifiManager.STATUS_NETWORK_SUGGESTIONS_SUCCESS) {
             lastSuggestedNetwork = wifiNetworkSuggestion
-            //lastSuggestedNetworkSSID = ssid
             showToast("Suggestion Added")
         }
     }
 
-    private fun showToast(text: String) {
+    //@SuppressLint("MissingPermission")
+    @RequiresApi(Build.VERSION_CODES.Q)
+    fun connectUsingWifiEasyConnect(activity: Activity) {
+        activity.startActivityForResult(
+            Intent(android.provider.Settings.ACTION_PROCESS_WIFI_EASY_CONNECT_URI),
+            1237
+        )
+    }
+
+    private fun showToast(text: CharSequence) {
         Toast.makeText(context, text, Toast.LENGTH_LONG).show()
     }
 }

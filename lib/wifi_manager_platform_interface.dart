@@ -35,4 +35,8 @@ abstract class WifiManagerPlatform extends PlatformInterface {
   Future<bool> requestWifi({required WifiCredentials wifiCredentials}) {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
+
+  Future<bool> connectUsingWifiEasyConnect() {
+    throw UnimplementedError('platformVersion() has not been implemented.');
+  }
 }

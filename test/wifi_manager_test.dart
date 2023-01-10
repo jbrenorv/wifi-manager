@@ -17,6 +17,9 @@ class MockWifiManagerPlatform
   @override
   Future<bool> requestWifi({required WifiCredentials wifiCredentials}) =>
       Future.value(true);
+
+  @override
+  Future<bool> connectUsingWifiEasyConnect() => Future.value(true);
 }
 
 void main() {

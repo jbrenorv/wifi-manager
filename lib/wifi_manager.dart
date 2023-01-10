@@ -15,4 +15,9 @@ class WifiManager {
     return WifiManagerPlatform.instance
         .requestWifi(wifiCredentials: wifiCredentials);
   }
+
+  Future<bool> connectUsingWifiEasyConnect(
+      {required WifiCredentials wifiCredentials}) {
+    return WifiManagerPlatform.instance.connectUsingWifiEasyConnect();
+  }
 }

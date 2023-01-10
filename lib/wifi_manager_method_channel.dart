@@ -35,4 +35,16 @@ class MethodChannelWifiManager extends WifiManagerPlatform {
       return false;
     }
   }
+
+  @override
+  Future<bool> connectUsingWifiEasyConnect() async {
+    try {
+      final requestCompletedSuccessfully =
+          await methodChannel.invokeMethod<bool>('connectUsingWifiEasyConnect');
+      return requestCompletedSuccessfully ?? false;
+    } on PlatformException catch (e) {
+      print("_-_requestWifi $e");
+      return false;
+    }
+  }
 }
