@@ -36,7 +36,11 @@ abstract class WifiManagerPlatform extends PlatformInterface {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
 
-  Future<bool> connectUsingWifiEasyConnect() {
+  Future<bool> openWifiSettings() {
+    throw UnimplementedError('platformVersion() has not been implemented.');
+  }
+
+  Future<bool> showToast() {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
 }

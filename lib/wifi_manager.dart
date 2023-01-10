@@ -16,7 +16,11 @@ class WifiManager {
         .requestWifi(wifiCredentials: wifiCredentials);
   }
 
-  Future<bool> connectUsingWifiEasyConnect() {
-    return WifiManagerPlatform.instance.connectUsingWifiEasyConnect();
+  Future<bool> openWifiSettings() {
+    return WifiManagerPlatform.instance.openWifiSettings();
+  }
+
+  Future<bool> showToast() {
+    return WifiManagerPlatform.instance.showToast();
   }
 }

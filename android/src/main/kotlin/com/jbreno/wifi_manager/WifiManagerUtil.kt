@@ -106,16 +106,14 @@ class WifiManagerUtil(private val context: Context) {
         }
     }
 
-    //@SuppressLint("MissingPermission")
-    @RequiresApi(Build.VERSION_CODES.Q)
-    fun connectUsingWifiEasyConnect(activity: Activity) {
+    fun openWifiSettings(activity: Activity) {
         activity.startActivityForResult(
-            Intent(android.provider.Settings.ACTION_PROCESS_WIFI_EASY_CONNECT_URI),
-            1237
+            Intent(android.provider.Settings.ACTION_WIFI_SETTINGS),
+            1
         )
     }
 
-    private fun showToast(text: CharSequence) {
+    fun showToast(text: CharSequence) {
         Toast.makeText(context, text, Toast.LENGTH_LONG).show()
     }
 }

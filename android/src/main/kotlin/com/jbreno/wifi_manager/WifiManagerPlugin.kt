@@ -49,11 +49,15 @@ class WifiManagerPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
         result.success(true)
       }
 
-      "connectUsingWifiEasyConnect" -> {
+      "openWifiSettings" -> {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-          wifiManagerUtil.connectUsingWifiEasyConnect(activity)
+          wifiManagerUtil.openWifiSettings(activity)
         }
         result.success(true)
+      }
+
+      "showToast" -> {
+        wifiManagerUtil.showToast("Toast text")
       }
 
       else -> result.notImplemented()
