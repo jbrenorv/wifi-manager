@@ -107,10 +107,11 @@ class WifiManagerUtil(private val context: Context) {
     }
 
     fun openWifiSettings(activity: Activity) {
-        activity.startActivityForResult(
-            Intent(android.provider.Settings.ACTION_WIFI_SETTINGS),
-            1
-        )
+        activity.startActivity(Intent(android.provider.Settings.ACTION_WIFI_SETTINGS))
+//        activity.startActivityForResult(
+//            Intent(android.provider.Settings.ACTION_WIFI_SETTINGS),
+//            1
+//        )
     }
 
     fun showToast(text: CharSequence) {
