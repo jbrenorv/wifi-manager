@@ -55,6 +55,14 @@ class WifiManagerUtil(private val context: Context) {
         return "New:\nID: ${wifiInfo?.networkId}\nSSID: ${wifiInfo?.ssid}\n$wifiInfoToString\n\n$networkCapabilitiesToString"
     }
 
+    fun openWifiSettings(activity: Activity) {
+        activity.startActivity(Intent(android.provider.Settings.ACTION_WIFI_SETTINGS))
+//        activity.startActivityForResult(
+//            Intent(android.provider.Settings.ACTION_WIFI_SETTINGS),
+//            1
+//        )
+    }
+
     fun requestWifi(wifiCredentials: WifiCredentials) {
         val ssid = wifiCredentials.ssid
         val password = wifiCredentials.password ?: ""
@@ -62,6 +70,7 @@ class WifiManagerUtil(private val context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
 
             requestWifiApi30AndLater(ssid, password)
+            // connectUsingNetworkSuggestion(ssid, password)
 
         } else {
 
@@ -145,13 +154,5 @@ class WifiManagerUtil(private val context: Context) {
             lastSuggestedNetwork = wifiNetworkSuggestion
             showToast("Suggestion Added")
         }
-    }
-
-    private fun openWifiSettings(activity: Activity) {
-        activity.startActivity(Intent(android.provider.Settings.ACTION_WIFI_SETTINGS))
-//        activity.startActivityForResult(
-//            Intent(android.provider.Settings.ACTION_WIFI_SETTINGS),
-//            1
-//        )
     }
 }
