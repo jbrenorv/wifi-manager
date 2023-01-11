@@ -7,6 +7,9 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkCapabilities
+import android.net.NetworkRequest
 import android.net.wifi.*
 import android.os.Build
 import android.widget.Toast
@@ -18,6 +21,10 @@ class WifiManagerUtil(private val context: Context) {
     private var wifiManager: WifiManager =
         context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
     private var lastSuggestedNetwork: WifiNetworkSuggestion? = null
+
+    fun showToast(text: CharSequence) {
+        Toast.makeText(context, text, Toast.LENGTH_LONG).show()
+    }
 
     @SuppressLint("MissingPermission")
     fun getConnectionInfo(): String {
@@ -32,7 +39,7 @@ class WifiManagerUtil(private val context: Context) {
                 configuredNetworks += "SSID: ${it.SSID} - ID: ${it.networkId}\n"
             }
 
-            return "Old - $connectedTo \n\n $wifiInfo \n\n $configuredNetworks"
+            return "Old - $connectedTo \n\n $wifiInfo \n\n$configuredNetworks"
         }
 
         val connectivityManager =
@@ -49,21 +56,55 @@ class WifiManagerUtil(private val context: Context) {
     }
 
     fun requestWifi(wifiCredentials: WifiCredentials) {
+        val ssid = wifiCredentials.ssid
+        val password = wifiCredentials.password ?: ""
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
 
-            connectUsingNetworkSuggestion(
-                wifiCredentials.ssid, wifiCredentials.password ?: ""
-            )
+            requestWifiApi30AndLater(ssid, password)
 
         } else {
 
-            val conf = WifiConfiguration()
-            conf.SSID = "\"${wifiCredentials.ssid}\""
-            if (wifiCredentials.hasSecurity) conf.preSharedKey = "\"${wifiCredentials.password}\""
-            val netId = wifiManager.addNetwork(conf)
-            wifiManager.enableNetwork(netId, true)
+            requestWifiApiLessThan30(ssid, password)
 
         }
+    }
+
+    private fun requestWifiApiLessThan30(ssid: String, password: String) {
+        val wifiConfig = WifiConfiguration().apply {
+            SSID = "\"$ssid\""
+            preSharedKey = "\"$password\""
+        }
+        val netId = wifiManager.addNetwork(wifiConfig)
+        wifiManager.disconnect()
+        wifiManager.enableNetwork(netId, true)
+        wifiManager.reconnect()
+
+//        val conf = WifiConfiguration()
+//        conf.SSID = "\"$ssid\""
+//        if (wifiCredentials.hasSecurity) conf.preSharedKey = "\"${wifiCredentials.password}\""
+//        val netId = wifiManager.addNetwork(conf)
+//        wifiManager.enableNetwork(netId, true)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.Q)
+    private fun requestWifiApi30AndLater(ssid: String, password: String) {
+        val connectivityManager = context.applicationContext.getSystemService(ConnectivityManager::class.java)
+        val wifiConfig = WifiNetworkSpecifier.Builder()
+            .setSsid(ssid)
+            .setWpa2Passphrase(password)
+            .build()
+        val request = NetworkRequest.Builder()
+            .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+            .setNetworkSpecifier(wifiConfig)
+            .build()
+        val callback = object : ConnectivityManager.NetworkCallback() {
+            override fun onAvailable(network: Network) {
+                super.onAvailable(network)
+                connectivityManager.bindProcessToNetwork(network)
+            }
+        }
+        connectivityManager.requestNetwork(request, callback)
     }
 
     @SuppressLint("MissingPermission")
@@ -106,15 +147,11 @@ class WifiManagerUtil(private val context: Context) {
         }
     }
 
-    fun openWifiSettings(activity: Activity) {
+    private fun openWifiSettings(activity: Activity) {
         activity.startActivity(Intent(android.provider.Settings.ACTION_WIFI_SETTINGS))
 //        activity.startActivityForResult(
 //            Intent(android.provider.Settings.ACTION_WIFI_SETTINGS),
 //            1
 //        )
-    }
-
-    fun showToast(text: CharSequence) {
-        Toast.makeText(context, text, Toast.LENGTH_LONG).show()
     }
 }
