@@ -55,25 +55,20 @@ class WifiManagerUtil(private val context: Context) {
         return "New:\nID: ${wifiInfo?.networkId}\nSSID: ${wifiInfo?.ssid}\n$wifiInfoToString\n\n$networkCapabilitiesToString"
     }
 
-    fun openWifiSettings(activity: Activity) {
+    fun openWifiSettings(activity: Activity): Boolean {
         val intent = Intent(android.provider.Settings.ACTION_WIFI_SETTINGS)
         if (intent.resolveActivity(context.packageManager) != null) {
             activity.startActivity(intent)
-            showToast("intent.resolveActivity isn't null")
-        } else {
-            showToast("intent.resolveActivity is null")
+            return true
         }
-//        activity.startActivityForResult(
-//            Intent(android.provider.Settings.ACTION_WIFI_SETTINGS),
-//            1
-//        )
+        return false
     }
 
-    fun requestWifi(wifiCredentials: WifiCredentials) {
+    fun requestWifi(wifiCredentials: WifiCredentials): Boolean {
         val ssid = wifiCredentials.ssid
         val password = wifiCredentials.password ?: ""
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
 
             requestWifiApi30AndLater(ssid, password)
             // connectUsingNetworkSuggestion(ssid, password)
@@ -85,7 +80,7 @@ class WifiManagerUtil(private val context: Context) {
         }
     }
 
-    private fun requestWifiApiLessThan30(ssid: String, password: String) {
+    private fun requestWifiApiLessThan30(ssid: String, password: String): Boolean {
         val wifiConfig = WifiConfiguration().apply {
             SSID = "\"$ssid\""
             preSharedKey = "\"$password\""
@@ -94,37 +89,17 @@ class WifiManagerUtil(private val context: Context) {
         wifiManager.disconnect()
         wifiManager.enableNetwork(netId, true)
         wifiManager.reconnect()
-
-//        val conf = WifiConfiguration()
-//        conf.SSID = "\"$ssid\""
-//        if (wifiCredentials.hasSecurity) conf.preSharedKey = "\"${wifiCredentials.password}\""
-//        val netId = wifiManager.addNetwork(conf)
-//        wifiManager.enableNetwork(netId, true)
+        return true
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
-    private fun requestWifiApi30AndLater(ssid: String, password: String) {
-        val connectivityManager = context.applicationContext.getSystemService(ConnectivityManager::class.java)
-//        val wifiConfig = WifiNetworkSpecifier.Builder()
-//            .setSsid(ssid)
-//            .setWpa2Passphrase(password)
-//            .build()
-//        val wifiConfig = WifiNetworkSpecifier.Builder()
-//            .setSsid(ssid)
-//            .setWpa2Passphrase(password)
-//            .setIsUserInteractionRequired(false)
-//            .build()
-        val wifiConfig = WifiNetworkSpecifier.Builder()
-            .setSsid(ssid)
-            .setWpa2Passphrase(password)
-//            .setUserIntent(WifiNetworkSpecifier.USER_PRIVATE_DO_NOT_SHOW_NEW_CONNECTION_REQUEST)
-
-            .build()
-
-        val request = NetworkRequest.Builder()
-            .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+    private fun requestWifiApi30AndLater(ssid: String, password: String): Boolean {
+        val connectivityManager =
+            context.applicationContext.getSystemService(ConnectivityManager::class.java)
+        val wifiConfig =
+            WifiNetworkSpecifier.Builder().setSsid(ssid).setWpa2Passphrase(password).build()
+        val request = NetworkRequest.Builder().addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
             .setNetworkSpecifier(wifiConfig)
-//            .set
             .build()
         val callback = object : ConnectivityManager.NetworkCallback() {
             override fun onAvailable(network: Network) {
@@ -133,6 +108,7 @@ class WifiManagerUtil(private val context: Context) {
             }
         }
         connectivityManager.requestNetwork(request, callback)
+        return true
     }
 
     @SuppressLint("MissingPermission")
