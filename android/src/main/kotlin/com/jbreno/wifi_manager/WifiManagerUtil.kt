@@ -56,7 +56,13 @@ class WifiManagerUtil(private val context: Context) {
     }
 
     fun openWifiSettings(activity: Activity) {
-        activity.startActivity(Intent(android.provider.Settings.ACTION_WIFI_SETTINGS))
+        val intent = Intent(android.provider.Settings.ACTION_WIFI_SETTINGS)
+        if (intent.resolveActivity(context.packageManager) != null) {
+            activity.startActivity(intent)
+            showToast("intent.resolveActivity isn't null")
+        } else {
+            showToast("intent.resolveActivity is null")
+        }
 //        activity.startActivityForResult(
 //            Intent(android.provider.Settings.ACTION_WIFI_SETTINGS),
 //            1
@@ -99,13 +105,26 @@ class WifiManagerUtil(private val context: Context) {
     @RequiresApi(Build.VERSION_CODES.Q)
     private fun requestWifiApi30AndLater(ssid: String, password: String) {
         val connectivityManager = context.applicationContext.getSystemService(ConnectivityManager::class.java)
+//        val wifiConfig = WifiNetworkSpecifier.Builder()
+//            .setSsid(ssid)
+//            .setWpa2Passphrase(password)
+//            .build()
+//        val wifiConfig = WifiNetworkSpecifier.Builder()
+//            .setSsid(ssid)
+//            .setWpa2Passphrase(password)
+//            .setIsUserInteractionRequired(false)
+//            .build()
         val wifiConfig = WifiNetworkSpecifier.Builder()
             .setSsid(ssid)
             .setWpa2Passphrase(password)
+//            .setUserIntent(WifiNetworkSpecifier.USER_PRIVATE_DO_NOT_SHOW_NEW_CONNECTION_REQUEST)
+
             .build()
+
         val request = NetworkRequest.Builder()
             .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
             .setNetworkSpecifier(wifiConfig)
+//            .set
             .build()
         val callback = object : ConnectivityManager.NetworkCallback() {
             override fun onAvailable(network: Network) {
