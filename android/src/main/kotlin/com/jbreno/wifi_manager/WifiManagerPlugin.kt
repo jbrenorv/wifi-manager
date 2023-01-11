@@ -50,9 +50,9 @@ class WifiManagerPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
       }
 
       "openWifiSettings" -> {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
           wifiManagerUtil.openWifiSettings(activity)
-        }
+//        }
         result.success(true)
       }
 
